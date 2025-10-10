@@ -1,0 +1,126 @@
+esphome:
+  name: "medify-air-living-room"
+  friendly_name: "Medify Air (Living Room)"
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+# Enable logging
+logger:
+
+api:
+  encryption:
+    key: !secret medify-air-living_room_encryption_key
+
+ota:
+  - platform: esphome
+    password: !secret medify-air-living_room_ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Test Fallback Hotspot"
+    password: !secret ap_password
+
+switch:
+  - platform: template
+    name: "Power"
+    id: toggle_relay_1
+    restore_mode: DISABLED
+    optimistic: true
+    turn_on_action:
+      - switch.turn_on: toggle_relay_gpio32
+      - delay: 0.10s
+      - switch.turn_off: toggle_relay_gpio32
+    turn_off_action:
+      - switch.turn_on: toggle_relay_gpio32
+      - delay: 0.10s
+      - switch.turn_off: toggle_relay_gpio32
+
+  - platform: template
+    name: "Child Lock"
+    id: toggle_relay_2
+    restore_mode: DISABLED
+    optimistic: true
+    turn_on_action:
+      - switch.turn_on: toggle_relay_gpio35
+      - delay: 4.10s
+      - switch.turn_off: toggle_relay_gpio35
+    turn_off_action:
+      - switch.turn_on: toggle_relay_gpio35
+      - delay: 4.10s
+      - switch.turn_off: toggle_relay_gpio35
+  
+  - platform: gpio
+    id: toggle_relay_gpio35
+    pin: GPIO13
+    restore_mode: DISABLED
+  
+  - platform: gpio
+    id: toggle_relay_gpio32
+    pin: GPIO32
+    restore_mode: DISABLED
+
+  - platform: gpio
+    id: toggle_relay_gpio26
+    pin: GPIO26
+    restore_mode: DISABLED
+
+  - platform: gpio
+    id: toggle_relay_gpio25
+    pin: GPIO25
+    restore_mode: DISABLED
+
+button:
+  - platform: template
+    name: "Dimmer"
+    id: toggle_relay_3
+    on_press: 
+      then:
+      - switch.turn_on: toggle_relay_gpio26
+      - delay: 0.10s
+      - switch.turn_off: toggle_relay_gpio26
+
+  - platform: template
+    name: "Fan Speed"
+    id: toggle_relay_4
+    on_press:
+      - switch.turn_on: toggle_relay_gpio25
+      - delay: 0.10s
+      - switch.turn_off: toggle_relay_gpio25
+
+captive_portal:
+
+##
+# Touch sensors
+##
+
+# esp32_touch:
+#   setup_mode: False
+
+# binary_sensor:
+#   - platform: esp32_touch
+#     name: "GPI33"
+#     pin: GPIO33
+#     threshold: 1000
+
+#   - platform: esp32_touch
+#     name: "GPIO27"
+#     pin: GPIO27
+#     threshold: 1000
+
+#   - platform: esp32_touch
+#     name: "GPIO14"
+#     pin: GPIO14
+#     threshold: 1000
+
+#   - platform: esp32_touch
+#     name: "GPIO12"
+#     pin: GPIO12
+#     threshold: 1000
+    

@@ -1,0 +1,52 @@
+# This configuration manages the ESP32 module integrated into my Pelonis fan.
+esphome:
+  name: "pelonis-fan"
+  friendly_name: "Pelonis Fan"
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+# Enable logging
+logger:
+
+api:
+  encryption:
+    key: !secret pelonis_fan_api_key
+
+ota:
+  - platform: esphome
+    password: !secret pelonis_fan_ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Pelonis Fan Fallback Hotspot"
+    password: !secret ap_password
+
+switch:
+  - platform: template
+    name: "Toggle Relay"
+    id: toggle_relay
+    restore_mode: ALWAYS_ON        
+    optimistic: true  # This allows the switch to report its state immediately
+    turn_on_action:
+      - switch.turn_on: toggle_relay_gpio
+      - delay: 0.25s
+      - switch.turn_off: toggle_relay_gpio
+    turn_off_action:
+      - switch.turn_on: toggle_relay_gpio
+      - delay: 0.25s
+      - switch.turn_off: toggle_relay_gpio
+
+  - platform: gpio
+    id: toggle_relay_gpio
+    pin: GPIO32
+    restore_mode: ALWAYS_ON
+
+captive_portal:
+
