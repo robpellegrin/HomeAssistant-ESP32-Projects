@@ -1,101 +1,99 @@
 esphome:
-  name: dreo-fan
-  friendly_name: "Dreo Fan"
+    name: dreo-fan
+    friendly_name: "Dreo Fan"
 
 esp32:
-  board: esp32dev
-  framework:
-    type: esp-idf
+    board: esp32dev
+    framework:
+        type: esp-idf
 
 # Enable logging
 logger:
 
 api:
-  encryption:
-    key: !secret dreo_api_key
+    encryption:
+        key: !secret dreo_api_key
 
 ota:
-  - platform: esphome
-    password: !secret dreo_ota_password
+    - platform: esphome
+      password: !secret dreo_ota_password
 
 wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
+    ssid: !secret wifi_ssid
+    password: !secret wifi_password
 
-  # Enable fallback hotspot (captive portal) in case wifi connection fails
-  ap:
-    ssid: "Dreo-Fan Fallback Hotspot"
-    password: !secret ap_password
+    # Enable fallback hotspot (captive portal) in case wifi connection fails
+    ap:
+        ssid: "Dreo-Fan Fallback Hotspot"
+        password: !secret ap_password
 
+captive_portal:
 
 # GPIO output for controlling the circuit - Use GPIO23
 switch:
-  - platform: template
-    name: "Power"
-    id: toggle_power_switch
-    restore_mode: DISABLED
-    optimistic: true
-    turn_on_action:
-      - switch.turn_on: toggle_power
-      - delay: 0.15s
-      - switch.turn_off: toggle_power
-    turn_off_action:
-      - switch.turn_on: toggle_power
-      - delay: 0.15s
-      - switch.turn_off: toggle_power
+    - platform: template
+      name: "Power"
+      id: toggle_power_switch
+      restore_mode: DISABLED
+      optimistic: true
+      turn_on_action:
+          - switch.turn_on: toggle_power
+          - delay: 0.15s
+          - switch.turn_off: toggle_power
+      turn_off_action:
+          - switch.turn_on: toggle_power
+          - delay: 0.15s
+          - switch.turn_off: toggle_power
 
-  - platform: template
-    name: "Oscillate"
-    id: toggle_oscillate_switch
-    restore_mode: DISABLED
-    optimistic: true       
-    turn_on_action:
-      - switch.turn_on: toggle_oscillate
-      - delay: 0.15s
-      - switch.turn_off: toggle_oscillate
-    turn_off_action:
-      - switch.turn_on: toggle_oscillate
-      - delay: 0.15s
-      - switch.turn_off: toggle_oscillate
+    - platform: template
+      name: "Oscillate"
+      id: toggle_oscillate_switch
+      restore_mode: DISABLED
+      optimistic: true
+      turn_on_action:
+          - switch.turn_on: toggle_oscillate
+          - delay: 0.15s
+          - switch.turn_off: toggle_oscillate
+      turn_off_action:
+          - switch.turn_on: toggle_oscillate
+          - delay: 0.15s
+          - switch.turn_off: toggle_oscillate
 
-  - platform: gpio
-    id: toggle_speed
-    pin: GPIO26
-    restore_mode: DISABLED
-  
-  - platform: gpio
-    id: toggle_oscillate
-    pin: GPIO12
-    restore_mode: DISABLED
+    - platform: gpio
+      id: toggle_speed
+      pin: GPIO26
+      restore_mode: DISABLED
 
-  - platform: gpio
-    id: toggle_mode
-    pin: GPIO14
-    restore_mode: DISABLED
-  
-  - platform: gpio
-    id: toggle_power
-    pin: GPIO27
-    restore_mode: DISABLED
+    - platform: gpio
+      id: toggle_oscillate
+      pin: GPIO12
+      restore_mode: DISABLED
+
+    - platform: gpio
+      id: toggle_mode
+      pin: GPIO14
+      restore_mode: DISABLED
+
+    - platform: gpio
+      id: toggle_power
+      pin: GPIO27
+      restore_mode: DISABLED
 
 button:
-  - platform: template
-    name: "Speed"
-    id: toggle_speed_button
-    # optimistic: true  # This allows the button to report its state immediately
-    on_press:
-      - switch.turn_on: toggle_speed
-      - delay: 0.15s
-      - switch.turn_off: toggle_speed
-  
-  - platform: template
-    name: "Mode"
-    id: toggle_mode_button
-    # optimistic: true  # This allows the button to report its state immediately
-    on_press:
-      - switch.turn_on: toggle_mode
-      - delay: 0.15s
-      - switch.turn_off: toggle_mode
+    - platform: template
+      name: "Speed"
+      id: toggle_speed_button
+      # optimistic: true  # This allows the button to report its state immediately
+      on_press:
+          - switch.turn_on: toggle_speed
+          - delay: 0.15s
+          - switch.turn_off: toggle_speed
 
-captive_portal:
-    
+    - platform: template
+      name: "Mode"
+      id: toggle_mode_button
+      # optimistic: true  # This allows the button to report its state immediately
+      on_press:
+          - switch.turn_on: toggle_mode
+          - delay: 0.15s
+          - switch.turn_off: toggle_mode
