@@ -63,7 +63,7 @@ switch:
 
 button:
     - platform: restart
-      name: "RF ESP32 Restart"
+      name: "${friendly_name} Restart"
 
 sensor:
     - platform: uptime
