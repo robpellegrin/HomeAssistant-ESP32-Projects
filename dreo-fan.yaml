@@ -46,7 +46,7 @@ switch:
       name: "Power"
       id: toggle_power_switch
       restore_mode: DISABLED
-      optimistic: true
+      # optimistic: true
       turn_on_action:
           - switch.turn_on: toggle_power
           - delay: 0.15s
@@ -60,7 +60,7 @@ switch:
       name: "Oscillate"
       id: toggle_oscillate_switch
       restore_mode: DISABLED
-      optimistic: true
+      # optimistic: true
       turn_on_action:
           - switch.turn_on: toggle_oscillate
           - delay: 0.15s
