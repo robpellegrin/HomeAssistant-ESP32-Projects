@@ -1,52 +1,86 @@
 # This configuration manages the ESP32 module integrated into my Pelonis fan.
+substitutions:
+    device_name: pelonis_fan
+    friendly_name: "Pelonis Fan"
+
 esphome:
-  name: "pelonis-fan"
-  friendly_name: "Pelonis Fan"
+    name: "pelonis-fan"
+    friendly_name: "Pelonis Fan"
 
 esp32:
-  board: esp32dev
-  framework:
-    type: esp-idf
+    board: esp32dev
+    framework:
+        type: esp-idf
+        advanced:
+            minimum_chip_revision: "3.1"
+            sram1_as_iram: true
 
 # Enable logging
 logger:
+    level: INFO
 
 api:
-  encryption:
-    key: !secret pelonis_fan_api_key
+    encryption:
+        key: !secret pelonis_fan_api_key
 
 ota:
-  - platform: esphome
-    password: !secret pelonis_fan_ota_password
+    - platform: esphome
+      password: !secret pelonis_fan_ota_password
 
 wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
+    ssid: !secret wifi_ssid
+    password: !secret wifi_password
 
-  # Enable fallback hotspot (captive portal) in case wifi connection fails
-  ap:
-    ssid: "Pelonis Fan Fallback Hotspot"
-    password: !secret ap_password
+    fast_connect: true
+    reboot_timeout: 15min
 
-switch:
-  - platform: template
-    name: "Toggle Relay"
-    id: toggle_relay
-    restore_mode: ALWAYS_ON        
-    optimistic: true  # This allows the switch to report its state immediately
-    turn_on_action:
-      - switch.turn_on: toggle_relay_gpio
-      - delay: 0.25s
-      - switch.turn_off: toggle_relay_gpio
-    turn_off_action:
-      - switch.turn_on: toggle_relay_gpio
-      - delay: 0.25s
-      - switch.turn_off: toggle_relay_gpio
-
-  - platform: gpio
-    id: toggle_relay_gpio
-    pin: GPIO32
-    restore_mode: ALWAYS_ON
+    # Enable fallback hotspot (captive portal) in case wifi connection fails
+    ap:
+        ssid: "Pelonis Fan Fallback Hotspot"
+        password: !secret ap_password
 
 captive_portal:
 
+switch:
+    - platform: template
+      name: "Toggle Relay"
+      id: toggle_relay
+      restore_mode: ALWAYS_ON
+      optimistic: true # This allows the switch to report its state immediately
+      turn_on_action:
+          - switch.turn_on: toggle_relay_gpio
+          - delay: 0.25s
+          - switch.turn_off: toggle_relay_gpio
+      turn_off_action:
+          - switch.turn_on: toggle_relay_gpio
+          - delay: 0.25s
+          - switch.turn_off: toggle_relay_gpio
+
+    - platform: gpio
+      id: toggle_relay_gpio
+      pin: GPIO32
+      restore_mode: ALWAYS_ON
+
+button:
+    - platform: restart
+      name: "RF ESP32 Restart"
+
+sensor:
+    - platform: uptime
+      name: "${friendly_name} Uptime"
+
+    - platform: wifi_signal
+      name: "${friendly_name} WiFi Signal"
+      update_interval: 60s
+
+    - platform: internal_temperature
+      name: "${friendly_name} Internal Temperature"
+
+binary_sensor:
+    - platform: status
+      name: "${friendly_name} Status"
+
+text_sensor:
+    - platform: wifi_info
+      ip_address:
+          name: "${friendly_name} IP Address"
