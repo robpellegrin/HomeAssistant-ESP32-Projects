@@ -3,104 +3,102 @@ substitutions:
     friendly_name: "Medify Air (Bedroom)"
 
 esphome:
-  name: "${device_name}"
-  friendly_name: "${friendly_name}"
+    name: "${device_name}"
+    friendly_name: "${friendly_name}"
 
 esp32:
-  board: esp32dev
-  framework:
-    type: esp-idf
+    board: esp32dev
+    framework:
+        type: esp-idf
 
 # Enable logging
 logger:
-  level: INFO
+    level: INFO
 
 api:
-  encryption:
-    key: !secret medify-air-bedroom_encryption_key
+    encryption:
+        key: !secret medify-air-bedroom_encryption_key
 
 ota:
-  - platform: esphome
-    password: !secret medify-air-bedroom_ota_password
+    - platform: esphome
+      password: !secret medify-air-bedroom_ota_password
 
 wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
+    ssid: !secret wifi_ssid
+    password: !secret wifi_password
 
-  # Enable fallback hotspot (captive portal) in case wifi connection fails
-  ap:
-    ssid: "Dreo Fallback Hotspot"
-    password: !secret ap_password
+    # Enable fallback hotspot (captive portal) in case wifi connection fails
+    ap:
+        ssid: "Dreo Fallback Hotspot"
+        password: !secret ap_password
 
 # GPIO output for controlling the circuit
 switch:
-  - platform: template
-    name: "Power"
-    id: toggle_relay 
-    restore_mode: DISABLED
-    optimistic: true
-        
-    turn_on_action:
-      - switch.turn_on: toggle_relay_gpio
-      - delay: 0.10s
-      - switch.turn_off: toggle_relay_gpio
-    turn_off_action:
-      - switch.turn_on: toggle_relay_gpio
-      - delay: 0.10s
-      - switch.turn_off: toggle_relay_gpio
+    - platform: template
+      name: "Power"
+      id: toggle_relay
+      restore_mode: DISABLED
+      optimistic: true
 
-  - platform: template
-    name: "Child Lock"
-    id: toggle_relay_2
-    restore_mode: DISABLED
-    optimistic: true
-    turn_on_action:
-      - switch.turn_on: toggle_child_lock
-      - delay: 4.10s
-      - switch.turn_off: toggle_child_lock
-    turn_off_action:
-      - switch.turn_on: toggle_child_lock
-      - delay: 4.10s
-      - switch.turn_off: toggle_child_lock
+      turn_on_action:
+          - switch.turn_on: toggle_relay_gpio
+          - delay: 0.10s
+          - switch.turn_off: toggle_relay_gpio
+      turn_off_action:
+          - switch.turn_on: toggle_relay_gpio
+          - delay: 0.10s
+          - switch.turn_off: toggle_relay_gpio
 
-  - platform: gpio
-    id: toggle_relay_gpio
-    pin: GPIO26
-  
-  - platform: gpio
-    id: toggle_speed_gpio
-    pin: GPIO32
-    restore_mode: DISABLED
+    - platform: template
+      name: "Child Lock"
+      id: toggle_relay_2
+      restore_mode: DISABLED
+      optimistic: true
+      turn_on_action:
+          - switch.turn_on: toggle_child_lock
+          - delay: 4.10s
+          - switch.turn_off: toggle_child_lock
+      turn_off_action:
+          - switch.turn_on: toggle_child_lock
+          - delay: 4.10s
+          - switch.turn_off: toggle_child_lock
 
-  - platform: gpio
-    id: toggle_dimmer
-    pin: GPIO13
-    restore_mode: DISABLED
-  
-  - platform: gpio
-    id: toggle_child_lock
-    pin: GPIO33
-    restore_mode: DISABLED
+    - platform: gpio
+      id: toggle_relay_gpio
+      pin: GPIO26
 
+    - platform: gpio
+      id: toggle_speed_gpio
+      pin: GPIO32
+      restore_mode: DISABLED
+
+    - platform: gpio
+      id: toggle_dimmer
+      pin: GPIO13
+      restore_mode: DISABLED
+
+    - platform: gpio
+      id: toggle_child_lock
+      pin: GPIO33
+      restore_mode: DISABLED
 
 button:
-  - platform: template
-    name: "Speed"
-    id: toggle_speed
-    # optimistic: true  # This allows the button to report its state immediately
-    on_press:
-      - switch.turn_on: toggle_speed_gpio
-      - delay: 0.10s
-      - switch.turn_off: toggle_speed_gpio
-  
-  - platform: template
-    name: "Dimmer"
-    id: dimmer
-    # optimistic: true  # This allows the button to report its state immediately
-    on_press:
-      - switch.turn_on: toggle_dimmer
-      - delay: 0.10s
-      - switch.turn_off: toggle_dimmer
+    - platform: template
+      name: "Speed"
+      id: toggle_speed
+      # optimistic: true  # This allows the button to report its state immediately
+      on_press:
+          - switch.turn_on: toggle_speed_gpio
+          - delay: 0.10s
+          - switch.turn_off: toggle_speed_gpio
+
+    - platform: template
+      name: "Dimmer"
+      id: dimmer
+      # optimistic: true  # This allows the button to report its state immediately
+      on_press:
+          - switch.turn_on: toggle_dimmer
+          - delay: 0.10s
+          - switch.turn_off: toggle_dimmer
 
 captive_portal:
-
