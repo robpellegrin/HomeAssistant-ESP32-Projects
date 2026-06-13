@@ -93,7 +93,6 @@ button:
     - platform: template
       name: "Speed"
       id: toggle_speed
-      # optimistic: true  # This allows the button to report its state immediately
       on_press:
           - switch.turn_on: toggle_speed_gpio
           - delay: 0.10s
@@ -102,7 +101,6 @@ button:
     - platform: template
       name: "Dimmer"
       id: dimmer
-      # optimistic: true  # This allows the button to report its state immediately
       on_press:
           - switch.turn_on: toggle_dimmer
           - delay: 0.10s
