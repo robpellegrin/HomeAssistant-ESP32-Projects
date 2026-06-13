@@ -1,7 +1,7 @@
 # An ESP32 that controls an RF remote.
 esphome:
     name: rf-esp32
-    friendly_name: RF ESP32
+    friendly_name: "RF ESP32"
 
 esp32:
     board: esp32dev
@@ -53,6 +53,11 @@ script:
           - remote_transmitter.transmit_raw:
                 code: !include rf_codes/toggle_power.yaml
 
+    - id: toggle_power2
+      then:
+          - remote_transmitter.transmit_raw:
+                code: !include rf_codes/power_on.yaml
+
     - id: send_color_temp
       then:
           - remote_transmitter.transmit_raw:
@@ -80,6 +85,43 @@ switch:
       turn_off_action:
           - script.execute: toggle_power
 
+    - platform: template
+      name: "Power 2"
+      optimistic: true
+      turn_on_action:
+        - remote_transmitter.transmit_raw:
+            code: [
+              1251, -383, 1243, -389, 1237, -395,
+              427, -1208, 1238, -396, 1231, -400,
+              421, -1218, 1230, -409, 1224, -407,
+              416, -1219, 422, -1219, 1229, -402,
+              420, -1219, 1226, -408, 414, -1219,
+              1228, -409, 416, -1220, 424, -1213,
+              429, -1211, 432, -1210, 434, -1205,
+              437, -1203, 1245, -389, 433, -1203,
+              438
+            ]
+            repeat:
+              times: 5
+              wait_time: 10ms
+
+      turn_off_action:
+        - remote_transmitter.transmit_raw:
+            code: [
+              1251, -383, 1243, -389, 1237, -395,
+              427, -1208, 1238, -396, 1231, -400,
+              421, -1218, 1230, -409, 1224, -407,
+              416, -1219, 422, -1219, 1229, -402,
+              420, -1219, 1226, -408, 414, -1219,
+              1228, -409, 416, -1220, 424, -1213,
+              429, -1211, 432, -1210, 434, -1205,
+              437, -1203, 1245, -389, 433, -1203,
+              438
+            ]
+            repeat:
+              times: 5
+              wait_time: 10ms
+
 button:
     - platform: restart
       name: "RF ESP32 Restart"
@@ -98,6 +140,44 @@ button:
       name: "Brightness-"
       on_press:
           - script.execute: send_brightness_down
+
+    - platform: template
+      name: "Brightness+ 2"
+      on_press:
+        - remote_transmitter.transmit_raw:
+            code: [
+              1379, -338, 1290, -345, 1285, -353,
+              469, -1171, 1284, -357, 1271, -364,
+              460, -1186, 1267, -376, 1261, -376,
+              449, -1194, 454, -1194, 1261, -376,
+              448, -1194, 1261, -378, 445, -1199,
+              1254, -386, 441, -1202, 446, -1199,
+              449, -1193, 454, -1193, 455, -1190,
+              458, -1190, 1264, -375, 1255, -380,
+              442,
+            ]
+            repeat:
+              times: 5
+              wait_time: 10ms
+
+    - platform: template
+      name: "Brightness- 2"
+      on_press:
+        - remote_transmitter.transmit_raw:
+            code: [
+              1229, -409, 1218, -411, 1216, -416,
+              406, -1228, 1219, -417, 1209, -420,
+              403, -1234, 1217, -428, 1202, -426,
+              397, -1237, 408, -1232, 1216, -417,
+              405, -1231, 1214, -420, 403, -1232,
+              1217, -421, 405, -1232, 411, -1232,
+              412, -1224, 421, -1219, 425, -1215,
+              1232, -405, 1222, -408, 1220, -412,
+              411,
+            ]
+            repeat:
+              times: 5
+              wait_time: 10ms
 
 sensor:
     - platform: uptime
