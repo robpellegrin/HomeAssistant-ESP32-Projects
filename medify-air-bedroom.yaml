@@ -29,10 +29,15 @@ wifi:
     ssid: !secret wifi_ssid
     password: !secret wifi_password
 
+    fast_connect: true
+    reboot_timeout: 15min
+
     # Enable fallback hotspot (captive portal) in case wifi connection fails
     ap:
-        ssid: "Dreo Fallback Hotspot"
+        ssid: "${friendly_name} Fallback Hotspot"
         password: !secret ap_password
+
+captive_portal:
 
 # GPIO output for controlling the circuit
 switch:
@@ -103,4 +108,3 @@ button:
           - delay: 0.10s
           - switch.turn_off: toggle_dimmer
 
-captive_portal:
