@@ -1,6 +1,10 @@
+substitutions:
+    device_name: medify-air-bedroom
+    friendly_name: "Medify Air (Bedroom)"
+
 esphome:
-  name: "medify-air-bedroom"
-  friendly_name: "Medify Air (Bedroom)"
+  name: "${device_name}"
+  friendly_name: "${friendly_name}"
 
 esp32:
   board: esp32dev
@@ -9,6 +13,7 @@ esp32:
 
 # Enable logging
 logger:
+  level: INFO
 
 api:
   encryption:
