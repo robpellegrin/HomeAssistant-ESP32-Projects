@@ -106,3 +106,25 @@ button:
           - delay: 0.10s
           - switch.turn_off: toggle_dimmer
 
+    - platform: restart
+      name: "${friendly_name} Restart"
+
+sensor:
+    - platform: uptime
+      name: "${friendly_name} Uptime"
+
+    - platform: wifi_signal
+      name: "${friendly_name} WiFi Signal"
+      update_interval: 60s
+
+    - platform: internal_temperature
+      name: "${friendly_name} Internal Temperature"
+
+binary_sensor:
+    - platform: status
+      name: "${friendly_name} Status"
+
+text_sensor:
+    - platform: wifi_info
+      ip_address:
+          name: "${friendly_name} IP Address"
